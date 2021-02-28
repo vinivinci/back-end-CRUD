@@ -23,4 +23,4 @@ const user = User.findOne({email: 'admin@nextar.com.br'}, async function (err,re
 require("./controllers/authController")(app);
 require("./controllers/userController")(app);
 
-app.listen(8080);
+app.listen(process.env.PORT || 8080);
