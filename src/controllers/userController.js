@@ -1,6 +1,7 @@
 const Router = require("express");
 const User = require("../models/user");
 const authMiddleware = require("../middlewares/auth");
+const bcript = require("bcryptjs");
 const permissionMiddleware = require("../middlewares/verifyPermission");
 const router = Router();
 
@@ -11,6 +12,7 @@ router.post("/register", permissionMiddleware, async (req, res) => {
   try {
     if (await User.findOne({ email }))
       return res.status(400).send({ error: "Usuário ja existente" });
+    req.body.password = await bcript.hash(req.body.password, 10);
     const user = await User.create(req.body);
     user.password = undefined;
     return res.status(200).send(user);
@@ -52,9 +54,12 @@ router.put("/update/:userId", permissionMiddleware, async (req, res) => {
     user.name = name ?? user.name;
     user.email = email ?? user.email;
     user.phone = phone ?? user.phone;
-    user.password = password ?? user.password;
+    if(password){
+      const hash = await bcript.hash(password, 10);
+      user.password = hash;
+    }
     user.permission = permission ?? user.permission;
-    user.save();
+    await user.save();
     return res.status(200).send(true);
   } catch (err) {
     return res.status(400).send({ error: "Erro ao modificar usuário" });
