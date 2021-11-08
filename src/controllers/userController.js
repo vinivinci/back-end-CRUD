@@ -23,21 +23,21 @@ router.post("/register", permissionMiddleware, async (req, res) => {
 router.get("/get", async (req, res) => {
   try {
     const users = await User.find();
-    return res.status(200).send( users );
+    return res.status(200).send(users);
   } catch (err) {
     return res.status(400).send("Erro ao buscar usuários");
   }
 });
-router.get("/getForname", async (req, res)=>{
+router.get("/getForname", async (req, res) => {
   try {
     const name = req.query.name;
-    if(name){
-      const users = await User.find({name: { $regex: new RegExp("^" + name.toLowerCase(), "i") } });
-      return res.status(200).send( users );
-    }else{
+    if (name) {
+      const users = await User.find({ name: { $regex: new RegExp("^" + name.toLowerCase(), "i") } });
+      return res.status(200).send(users);
+    } else {
       const users = await User.find();
-      return res.status(200).send( users );
-    }  
+      return res.status(200).send(users);
+    }
   } catch (err) {
     return res.status(400).send("Erro ao buscar usuários");
   }
@@ -54,10 +54,11 @@ router.put("/update/:userId", permissionMiddleware, async (req, res) => {
     user.name = name ?? user.name;
     user.email = email ?? user.email;
     user.phone = phone ?? user.phone;
-    if(password){
+    if (password) {
       const hash = await bcript.hash(password, 10);
       user.password = hash;
     }
+    console.log(teste);
     user.permission = permission ?? user.permission;
     await user.save();
     return res.status(200).send(true);
