@@ -8,9 +8,9 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-
-const user = User.findOne({email: 'admin@nextar.com.br'}, async function (err,result){
-    if(!result){
+console.log('x')
+const user = User.findOne({ email: 'admin@nextar.com.br' }, async function (err, result) {
+    if (!result) {
         user.name = 'admin';
         user.password = await bcript.hash('admin', 10);
         user.email = 'admin@nextar.com.br';
